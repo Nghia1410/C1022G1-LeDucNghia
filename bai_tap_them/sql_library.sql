@@ -119,7 +119,20 @@ group by students.name_student
 order by sl desc limit 2;
 
 -- - Tao index cho cột  title của bảng books			
+create index index_name_book on books(name_book);
 
+-- - Tạo 1 view để lấy ra danh sách các quyển sách đã được mượn, có hiển thị thêm cột số lần đã được mượn					
+create view list_book_borrow as select name_book, count(borrow.borrow_id) as sl from books 
+join borrow on books.book_id = borrow.book_id
+group by books.name_book
+order by sl asc;
 
+-- - Viết 1 stored procedure thêm mới book trong database với tham số kiểu IN					
+delimiter //
+create procedure add_books(in book_id int, name_book varchar(50),in page_size int,in author_id int,in category_id int
+)
+begin
+insert into books(book_id, name_book, page_size, author_id, category_id) values (1,'tat den',4,2,3);
+end // delimiter //;
 
 
