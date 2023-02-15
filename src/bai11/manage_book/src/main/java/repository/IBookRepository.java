@@ -13,7 +13,7 @@ public interface IBookRepository {
 
     boolean updateBook(Book book);
 
-    List<Book> searchBook(String title);
+    List<Book> searchBookByTitle(String title);
 
     Book findBookById(int id);
 

@@ -32,12 +32,20 @@ public class BookServlet extends HttpServlet {
             case "edit":
                 updateBook(request, response);
             case "search":
-                searchBook(request,response);
+                searchBook(request, response);
         }
     }
 
     private void searchBook(HttpServletRequest request, HttpServletResponse response) {
-
+        String title = request.getParameter("title");
+        request.setAttribute("bookList", bookService.searchBookByTitle(title));
+        try {
+            request.getRequestDispatcher("view/list.jsp").forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateBook(HttpServletRequest request, HttpServletResponse response) {
@@ -46,14 +54,14 @@ public class BookServlet extends HttpServlet {
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));
         String author = request.getParameter("author");
         String category = request.getParameter("category");
-        Book book = new Book(id,title, pageSize, author, category);
-        bookService.updateBook(book);
+        Book book = new Book(id, title, pageSize, author, category);
+        boolean flag = bookService.updateBook(book);
         String mess = "Sửa thành công";
-        if (bookService.updateBook(book) == false) {
-            mess = "thử lại";
-        }
-        else {
-            mess="thành công";
+        if (flag) {
+            request.setAttribute("mess", mess);
+        } else {
+            mess = "thất bại";
+            request.setAttribute("mess", mess);
         }
         try {
             request.getRequestDispatcher("view/edit.jsp").forward(request, response);
@@ -104,11 +112,11 @@ public class BookServlet extends HttpServlet {
     }
 
     private void showFormEdit(HttpServletRequest request, HttpServletResponse response) {
-        int id =Integer.parseInt( request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id"));
 
-        request.setAttribute("book",bookService.findBookById(id));
+        request.setAttribute("book", bookService.findBookById(id));
         try {
-            request.getRequestDispatcher("/view/edit.jsp").forward(request,response);
+            request.getRequestDispatcher("/view/edit.jsp").forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {

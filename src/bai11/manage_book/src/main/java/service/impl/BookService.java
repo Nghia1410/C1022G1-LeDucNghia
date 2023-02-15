@@ -32,8 +32,8 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<Book> searchBook(String title) {
-        return null;
+    public List<Book> searchBookByTitle(String title) {
+        return bookRepository.searchBookByTitle(title);
     }
 
     @Override
